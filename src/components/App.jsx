@@ -9,7 +9,7 @@ class Gallery extends Component {
     images: [],
     inputSearch: '',
     limit: 12,
-    page: '1',
+    page: 1,
     isLoading: false,
     isModalOpen: false,
     API_KEY: '36730001-9966eb2ff0700192767337e13',
@@ -30,33 +30,56 @@ class Gallery extends Component {
     const { value, name } = e.target;
     this.setState({ [name]: value });
   };
-
+  nextPage = () => {
+    this.setState(
+      prevState => ({ ...prevState, page: prevState.page + 1 }),
+      () => {
+        this.fetchFromApi();
+      }
+    );
+  };
   fetchFromApi = async () => {
     this.setState({ isLoading: true });
+
     try {
       const { inputSearch, limit, page, API_KEY } = this.state;
       const response = await fetch(
         `https://pixabay.com/api/?q=${inputSearch}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=${limit}`
       );
       const data = await response.json();
-
-      this.setState(prevState => ({ ...prevState, images: data.hits }));
+      this.setState(
+        prevState => ({ ...prevState, images: data.hits }),
+        () => {
+          this.scrollDown();
+        }
+      );
     } catch (error) {
       console.log('error', error);
     } finally {
       this.setState({ isLoading: false });
     }
   };
+
+  scrollDown = () => {
+    window.scrollTo({
+      left: 0,
+      top: document.body.scrollHeight,
+      behavior: 'smooth',
+    });
+  };
   changeLimit = () => {
     this.setState(prevState => ({ ...prevState, limit: prevState.limit + 10 }));
   };
+
   handleSubmit = e => {
     e.preventDefault();
     if (this.state.inputSearch.length === 0) {
-      this.setState({ images: [] });
-      alert('Search input cannot me empty');
+      this.setState({ images: [], page: 1 }); // Reset page number to 1
+      alert('Search input cannot be empty');
     } else {
-      this.fetchFromApi();
+      this.setState({ images: [], page: 1 }, () => {
+        this.fetchFromApi();
+      });
     }
   };
 

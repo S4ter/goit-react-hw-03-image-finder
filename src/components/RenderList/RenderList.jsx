@@ -13,6 +13,7 @@ class RenderList extends Component {
   closeModal = () => {
     this.setState({ selectedImage: null });
   };
+
   render() {
     const { images } = this.props;
 
@@ -29,6 +30,7 @@ class RenderList extends Component {
               />
             </li>
           ))}
+
           <Modal
             isOpen={this.state.selectedImage !== null}
             imageUrl={this.state.selectedImage}
