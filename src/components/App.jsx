@@ -74,7 +74,7 @@ class Gallery extends Component {
   handleSubmit = e => {
     e.preventDefault();
     if (this.state.inputSearch.length === 0) {
-      this.setState({ images: [], page: 1 }); // Reset page number to 1
+      this.setState({ images: [], page: 1 });
       alert('Search input cannot be empty');
     } else {
       this.setState({ images: [], page: 1 }, () => {
