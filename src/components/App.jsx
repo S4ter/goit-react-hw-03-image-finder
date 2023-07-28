@@ -39,14 +39,13 @@ class Gallery extends Component {
     );
   };
   fetchFromApi = async () => {
-    this.setState({ isLoading: true });
-
     try {
       const { inputSearch, limit, page, API_KEY } = this.state;
       const response = await fetch(
         `https://pixabay.com/api/?q=${inputSearch}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=${limit}`
       );
       const data = await response.json();
+
       this.setState(
         prevState => ({ ...prevState, images: data.hits }),
         () => {
@@ -72,6 +71,7 @@ class Gallery extends Component {
   };
 
   handleSubmit = e => {
+    this.setState({ isLoading: true });
     e.preventDefault();
     if (this.state.inputSearch.length === 0) {
       this.setState({ images: [], page: 1 });
